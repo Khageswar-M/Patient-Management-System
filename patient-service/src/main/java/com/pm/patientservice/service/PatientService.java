@@ -8,6 +8,7 @@ import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
 import com.pm.patientservice.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PatientService {
 
     private final PatientRepository patientRepository;
@@ -74,5 +76,14 @@ public class PatientService {
 
         return PatientMapper.toDTO(updatedPatient);
 
+    }
+
+    public void deletePatient(UUID id){
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with id " + id));
+
+        patientRepository.deleteById(id);
+
+        log.info("Patient with id {} deleted successfully!", id);
     }
 }

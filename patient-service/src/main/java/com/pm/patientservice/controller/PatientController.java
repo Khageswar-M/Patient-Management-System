@@ -2,10 +2,13 @@ package com.pm.patientservice.controller;
 
 import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
+import com.pm.patientservice.dto.validators.CreatePatientValidationGroup;
 import com.pm.patientservice.service.PatientService;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +31,12 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<PatientResponseDTO> createPatient(
-            @Valid @RequestBody PatientRequestDTO requestDTO
+            @Validated({
+                    Default.class,
+                    CreatePatientValidationGroup.class
+            })
+            @RequestBody
+            PatientRequestDTO requestDTO
     ){
         PatientResponseDTO responseDTO =
                 patientService.cretePatient(
@@ -47,5 +55,12 @@ public class PatientController {
                 patientService.updatePatient(id, patientRequestDTO);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable UUID id){
+        patientService.deletePatient(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
