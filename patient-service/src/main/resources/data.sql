@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS patient;
+
 -- Ensure the 'patient' table exists
 CREATE TABLE IF NOT EXISTS patient
 (
