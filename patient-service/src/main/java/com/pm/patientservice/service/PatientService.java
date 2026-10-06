@@ -1,5 +1,6 @@
 package com.pm.patientservice.service;
 
+import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
 import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
@@ -23,5 +24,23 @@ public class PatientService {
                         PatientMapper::toDTO
                 )
                 .toList();
+    }
+
+    public PatientResponseDTO cretePatient(
+            PatientRequestDTO patientRequestDTO
+    ){
+        Patient newPatient = PatientMapper.toPatient(
+                patientRequestDTO
+        );
+
+        Patient savedPatient = patientRepository.save(newPatient);
+
+        return PatientResponseDTO.builder()
+                .id(savedPatient.getId().toString())
+                .name(savedPatient.getName())
+                .email(savedPatient.getEmail())
+                .address(savedPatient.getAddress())
+                .dateOfBirth(savedPatient.getDateOfBirth().toString())
+                .build();
     }
 }
