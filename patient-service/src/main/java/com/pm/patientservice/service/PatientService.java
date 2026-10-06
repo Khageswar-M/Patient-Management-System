@@ -25,6 +25,8 @@ public class PatientService {
     public List<PatientResponseDTO> getAllPatients(){
         List<Patient> patients = patientRepository.findAll();
 
+        log.info("All users fetched successfully");
+
         return patients.stream()
                 .map(
                         PatientMapper::toDTO
@@ -48,6 +50,8 @@ public class PatientService {
         );
 
         Patient savedPatient = patientRepository.save(newPatient);
+
+        log.info("Patient created successfully {}", savedPatient.getId());
 
         return PatientResponseDTO.builder()
                 .id(savedPatient.getId().toString())
@@ -73,6 +77,8 @@ public class PatientService {
         patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.dateOfBirth()));
 
         Patient updatedPatient = patientRepository.save(patient);
+
+        log.info("Patient updated successfully {}", updatedPatient.getId());
 
         return PatientMapper.toDTO(updatedPatient);
 
