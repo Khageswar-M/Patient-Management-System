@@ -90,51 +90,85 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- gRPC Server -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-grpc-server</artifactId>
+        </dependency>
+
+        <!-- Protobuf / gRPC generated code -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+        </dependency>
+
+        <!-- Required for gRPC Reflection -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
+
         <plugins>
+
+            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- Protobuf -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+
+                <configuration>
+
+                    <!--suppress UnresolvedMavenProperty -->
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf-java.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+
+                    <pluginId>grpc-java</pluginId>
+
+                    <!--suppress UnresolvedMavenProperty -->
+                    <pluginArtifact>
+                        io.grpc:protoc-gen-grpc-java:${grpc-java.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
+
+                </configuration>
+
                 <executions>
+
                     <execution>
-                        <id>default-compile</id>
-                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
+                            <goal>compile-custom</goal>
                         </goals>
-                        <configuration>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </path>
-                            </annotationProcessorPaths>
-                        </configuration>
                     </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </path>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
+                </executions>
+
+            </plugin>
+
+        </plugins>
+
+    </build>
 </project>
