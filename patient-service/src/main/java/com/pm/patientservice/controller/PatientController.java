@@ -16,10 +16,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/patients")
-@RequiredArgsConstructor
 public class PatientController {
 
     private final PatientService patientService;
+
+    public PatientController(PatientService patientService){
+        this.patientService = patientService;
+    }
 
     @GetMapping
     public ResponseEntity<List<PatientResponseDTO>> getPatients(){
@@ -31,10 +34,7 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<PatientResponseDTO> createPatient(
-            @Validated({
-                    Default.class,
-                    CreatePatientValidationGroup.class
-            })
+            @Valid
             @RequestBody
             PatientRequestDTO requestDTO
     ){
@@ -49,7 +49,12 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(
             @PathVariable UUID id,
-            @Valid @RequestBody PatientRequestDTO patientRequestDTO
+            @Validated({
+                    Default.class,
+                    CreatePatientValidationGroup.class
+            })
+            @RequestBody
+            PatientRequestDTO patientRequestDTO
     ){
         PatientResponseDTO response =
                 patientService.updatePatient(id, patientRequestDTO);

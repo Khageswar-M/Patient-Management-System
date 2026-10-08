@@ -1,5 +1,7 @@
 package com.pm.patientservice.service;
 
+import billing.BillingResponse;
+import billing.BillingServiceGrpc;
 import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
 import com.pm.patientservice.exception.EmailAlreadyExistsException;
@@ -53,11 +55,25 @@ public class PatientService {
             );
         }
 
-        Patient newPatient = PatientMapper.toPatient(
-                patientRequestDTO
-        );
+        log.info("Creating patient with email: {}", patientRequestDTO.email());
+
+        Patient newPatient = PatientMapper.toPatient(patientRequestDTO);
 
         Patient savedPatient = patientRepository.save(newPatient);
+
+        log.info(
+                "Patient saved successfully. ID = {}. Calling Billing Service...",
+                savedPatient.getId()
+        );
+
+        BillingResponse billingResponse =
+                billingServiceGrpcClient.createBillingAccount(
+                        savedPatient.getId().toString(),
+                        savedPatient.getName(),
+                        savedPatient.getEmail()
+                );
+
+        log.info("Billing response received: {}", billingResponse);
 
         log.info("Patient created successfully {}" , savedPatient.getId());
 
