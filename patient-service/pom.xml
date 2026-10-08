@@ -91,11 +91,12 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- gRPC Server -->
+        <!-- gRPC Client -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-grpc-server</artifactId>
+            <artifactId>spring-boot-starter-grpc-client</artifactId>
         </dependency>
+
 
         <!-- Protobuf / gRPC generated code -->
         <dependency>
@@ -131,6 +132,19 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
 
             <!-- Protobuf -->
